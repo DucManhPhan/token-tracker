@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  app:
+    restart: always
+    build: .
+    ports:
+      - "80:3000"
+    volumes:
+      - ./:/code
+    links:
+      - mongo
+    stdin_open: true
+    tty: true
+
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=ilv-token
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
+      - ./sql/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    
+volumes:
+  mongodb:
